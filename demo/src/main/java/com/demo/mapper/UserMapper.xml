@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.dao.UserDAO">
+	<resultMap id="BaseResultMap" type="com.demo.domain.UserDTO">
+		<id column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="id" jdbcType="VARCHAR" />
+		<result column="USER_PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="AGE" property="age" jdbcType="DECIMAL" />
+		<result column="TELPHONE" property="telphone" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		USER_NAME, USER_ID, USER_PASSWORD, AGE, TELPHONE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_user
+		where USER_NAME = #{userName,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_user
+		where USER_NAME = #{userName,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.demo.domain.UserDTO">
+		insert into t_user (USER_NAME, USER_ID, USER_PASSWORD,
+		AGE, TELPHONE)
+		values (#{userName,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{age,jdbcType=DECIMAL}, #{telphone,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.demo.domain.UserDTO">
+		insert into t_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userName != null">
+				USER_NAME,
+			</if>
+			<if test="id != null">
+				USER_ID,
+			</if>
+			<if test="password != null">
+				USER_PASSWORD,
+			</if>
+			<if test="age != null">
+				AGE,
+			</if>
+			<if test="telphone != null">
+				TELPHONE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=DECIMAL},
+			</if>
+			<if test="telphone != null">
+				#{telphone,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.demo.domain.UserDTO">
+		update t_user
+		<set>
+			<if test="id != null">
+				USER_ID = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				USER_PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				AGE = #{age,jdbcType=DECIMAL},
+			</if>
+			<if test="telphone != null">
+				TELPHONE = #{telphone,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where USER_NAME = #{userName,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.demo.domain.UserDTO">
+		update t_user
+		set USER_ID = #{id,jdbcType=VARCHAR},
+		USER_PASSWORD = #{password,jdbcType=VARCHAR},
+		AGE = #{age,jdbcType=DECIMAL},
+		TELPHONE = #{telphone,jdbcType=VARCHAR}
+		where USER_NAME = #{userName,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 查询所有用户 -->
+	<select id="selectAllUser" resultMap="BaseResultMap" parameterType="com.demo.domain.UserDTO">
+		select
+		<include refid="Base_Column_List" />
+		from t_user
+	</select>
+	
+	<!-- 更新用戶版本号 -->
+	<update id="updateUserVersion">
+		update t_user
+		set VERSION = VERSION + 1
+	</update>
+</mapper>
